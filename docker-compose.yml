@@ -1,0 +1,50 @@
+# 上云：在服务器上配置环境变量或 .env，勿把密钥提交进 Git
+# docker compose up -d --build
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: uniai
+      POSTGRES_PASSWORD: uniai
+      POSTGRES_DB: uniai
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U uniai -d uniai"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "${API_PORT:-8000}:8000"
+    environment:
+      DEBUG: "${DEBUG:-false}"
+      CORS_ORIGINS: "${CORS_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173}"
+      ROOT_PATH: "${ROOT_PATH:-}"
+      DATABASE_URL: "${DATABASE_URL:-postgresql+asyncpg://uniai:uniai@postgres:5432/uniai}"
+      REDIS_URL: "${REDIS_URL:-redis://redis:6379/0}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  pgdata:

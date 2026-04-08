@@ -1,0 +1,64 @@
+# ─── Dependencies ───
+node_modules/
+
+# ─── Build output ───
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# ─── Vite ───
+.vite/
+**/.vite/
+
+# ─── Environment & secrets ───
+.env
+.env.*
+!.env.example
+
+# ─── Logs & caches ───
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.eslintcache
+.cache/
+.parcel-cache/
+.turbo/
+
+# ─── Test / coverage ───
+coverage/
+
+# ─── OS ───
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ─── Editor (optional) ───
+.idea/
+.vscode/
+*.sw?
+*.sublime-*
+
+# ─── Python (backend) ───
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+ENV/
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.so
+*.db
+*.sqlite3
+backend/data/
+
+# ─── Large local artifacts (取消注释则不入库) ───
+archive/
